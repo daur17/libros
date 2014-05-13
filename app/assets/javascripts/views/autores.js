@@ -7,12 +7,13 @@ var AutoresMainView = Backbone.View.extend({
 	},
 
 	events: {
-		'submit #autorForm' : 'addAutor',
+		'click #addAutorBtn' : 'addAutor',
+		'submit #autorForm' : 'saveAutor',
 		'click #showAutorBtn' : 'showDetailsAutor',
 		'click #editAutorBtn' : 'editAutor'
 	},
 
-	addAutor: function(e){
+	saveAutor: function(e){
 		e.preventDefault();
 		var form = $('#autorForm');
 		var data = form.serializeArray();
@@ -36,10 +37,17 @@ var AutoresMainView = Backbone.View.extend({
 		$('#details-autor').html(vista.$el);
 	},
 
+	addAutor: function(){
+		var modelo = new AutorModel();
+		var vista = new autorFormView({model:modelo});
+		$('#autorForm .modal-body').html(vista.$el);
+	},
+
 	editAutor: function(e){
 		var id = e.target.value;
 		var modelo = autores.get(id);
-		$('#autorForm .modal-body').html('');
+		var vista = new autorFormView({model:modelo});
+		$('#autorForm .modal-body').html(vista.$el);
 	},
 
 	showAutores: function(modelo){
@@ -68,6 +76,18 @@ var showDetailsAutorView = Backbone.View.extend({
 	
 	initialize: function(){
 		this.template = _.template($('#tplShowDetailsAutor').html());
+		this.render();
+	},
+
+	render: function(){
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
+	}
+});
+
+var autorFormView = Backbone.View.extend({
+	initialize: function(){
+		this.template = _.template($('#tplAutorForm').html());
 		this.render();
 	},
 
