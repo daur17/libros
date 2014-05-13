@@ -68,6 +68,7 @@
 			<th>Descripcion</th>
 			<th></th>
 			<th></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody class="lista-autores">
@@ -81,10 +82,12 @@
 	<td>{{= descripcion }}</td>
 	<td><button value="{{=id}}" id="showAutorBtn" class="btn btn-default" data-toggle="modal" data-target="#showAutorModal">Mostrar</button></td>
 	<td><button value="{{=id}}" id="editAutorBtn" class="btn btn-warning" data-toggle="modal" data-target="#autorModal">Editar</button></td>
+	<td><button value="{{=id}}" id="deleteAutorBtn" class="btn btn-danger">Borrar</button></td>
 </script>
 
-<!-- EDITAR AUTOR TEMPLATE -->
+<!-- FORM AUTOR TEMPLATE -->
 <script type="text/template" id="tplAutorForm">
+	<input type="hidden" name="id" value="{{=id}}"/>
 	<div class="form-group">
 		<input type="text" name="nombre" value="{{=nombre}}" class="form-control" placeholder="Nombre..."/>
 	</div>

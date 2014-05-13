@@ -2,7 +2,7 @@ var AutoresMainView = Backbone.View.extend({
 	el: '.general-container',
 
 	initialize: function(){
-		autores.on('add', this.showAutores);
+		autores.on('add change', this.showAutores);
 		autores.fetch();
 	},
 
@@ -10,24 +10,32 @@ var AutoresMainView = Backbone.View.extend({
 		'click #addAutorBtn' : 'addAutor',
 		'submit #autorForm' : 'saveAutor',
 		'click #showAutorBtn' : 'showDetailsAutor',
-		'click #editAutorBtn' : 'editAutor'
+		'click #editAutorBtn' : 'editAutor',
+		'click #deleteAutorBtn' : 'deleteAutor'
 	},
 
 	saveAutor: function(e){
 		e.preventDefault();
 		var form = $('#autorForm');
 		var data = form.serializeArray();
-		var autor = new AutorModel({
-			nombre: data[0].value,
-			descripcion: data[1].value
-		});
+		if(!data[0].value){
+			var autor = new AutorModel({
+				nombre: data[1].value,
+				descripcion: data[2].value
+			});
+		}else{
+			var autor = new AutorModel({
+				id: data[0].value,
+				nombre: data[1].value,
+				descripcion: data[2].value
+			});
+		}
 
 		if(autor.save()){
+			$('#autorModal').modal('hide');
 			form.trigger('reset');
 			autores.fetch();
-			$('#addAutorModal').modal('hide');
 		}
-		console.log(autor);
 	},
 
 	showDetailsAutor: function(e){
@@ -50,12 +58,21 @@ var AutoresMainView = Backbone.View.extend({
 		$('#autorForm .modal-body').html(vista.$el);
 	},
 
+	deleteAutor: function(e){
+		var id = e.target.value;
+		var modelo = autores.get(id);
+		if(modelo.destroy()){
+			$(e.target).parent().parent().fadeOut(400);
+		}
+	},
+
 	showAutores: function(modelo){
 		var vista = new showAutoresView({model:modelo});
-		$('.lista-autores').append(vista.$el);
+		$('.lista-autores').append(vista.$el).hide().fadeIn(300);
 	}
 
 });
+
 
 var showAutoresView = Backbone.View.extend({
 	tagName: 'tr',
@@ -96,4 +113,3 @@ var autorFormView = Backbone.View.extend({
 		return this;
 	}
 });
-

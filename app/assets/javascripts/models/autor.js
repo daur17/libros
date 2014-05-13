@@ -1,5 +1,6 @@
 var AutorModel = Backbone.Model.extend({
 	defaults: {
+		id: null,
 		nombre: '',
 		descripcion: ''
 	},
